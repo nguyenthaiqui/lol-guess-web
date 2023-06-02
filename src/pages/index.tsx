@@ -7,6 +7,9 @@ export default function Home(data: IChampion) {
       <h1 className="title">
         Read <Link href="/champ">this page!</Link>
       </h1>
+      <h1>
+        <Link href={'/guess'}>Guess champion</Link>
+      </h1>
     </div>
   );
 }

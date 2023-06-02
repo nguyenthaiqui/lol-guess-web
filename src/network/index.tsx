@@ -26,7 +26,7 @@ const BASE_URL = `${process.env.API_URL}`;
 let token = null;
 if (typeof window !== 'undefined') {
   // Perform localStorage action
-  token = JSON.stringify(localStorage.getItem('access_token'));
+  token = localStorage.getItem('accessToken');
 }
 /*
   Function to get base url based on language (micro services)
@@ -43,7 +43,7 @@ export const instance = axios.create({
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${token?.toString()}`,
   },
 });
 
