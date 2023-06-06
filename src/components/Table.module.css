@@ -1,0 +1,14 @@
+.rightAnswer {
+  background-color: #42b883;
+  color: white;
+}
+
+.wrongAnswer {
+  background-color: #dc2f2f;
+  color: white;
+}
+
+.closeAnswer {
+  background-color: #ff894c;
+  color: white;
+}

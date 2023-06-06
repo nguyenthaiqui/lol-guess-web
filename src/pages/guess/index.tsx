@@ -2,8 +2,8 @@
 import { Button } from '@mui/material';
 import { useRouter } from 'next/router';
 import { instance as axiosClient } from '../../network';
-import BasicTable from '@/components/Table';
 import { useEffect, useState } from 'react';
+import ListGameTable from '@/components/Table';
 
 export default function GuessChampion() {
   const [data, setData] = useState([]);
@@ -44,7 +44,7 @@ export default function GuessChampion() {
   return (
     <div>
       {data.length > 0 ? (
-        <BasicTable data={data} handleClickContinue={handleClickContinue} />
+        <ListGameTable data={data} handleClickContinue={handleClickContinue} />
       ) : null}
       <Button onClick={(e) => handleStartGame()}>Create new Game</Button>
       <h1>Guess Champion Index</h1>

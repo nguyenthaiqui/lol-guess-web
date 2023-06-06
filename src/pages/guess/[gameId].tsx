@@ -8,6 +8,7 @@ import { IAPIResponse } from '@/types/apiResponse';
 import { IChampion } from '@/types/champion';
 import { SyntheticEvent } from 'react';
 import Link from 'next/link';
+import { HistoryGuessTable } from '@/components/Table';
 
 function gameDetail(data: IAPIResponse<IChampion[]>) {
   const listHero = data.data;
@@ -16,6 +17,7 @@ function gameDetail(data: IAPIResponse<IChampion[]>) {
   const [game, setGame] = useState({ id: '', isFinish: false, username: 'will', guessTime: 0 });
   const [championName, setChampionName] = useState('');
   const [isFinish, setIsFinish] = useState(false);
+  const [historyGuess, setHistoryGuess] = useState([]);
 
   const router = useRouter();
 
@@ -24,16 +26,37 @@ function gameDetail(data: IAPIResponse<IChampion[]>) {
     const gameId = router.query.gameId;
 
     const gameData = await axiosClient.get(`/game/${gameId}`);
+    // const historyGuessPromise = axiosClient.get(`/game/history/${gameId}`);
+
+    // const [gameData, historyGuessData] = await Promise.all([gameDataPromise, historyGuessPromise]);
+
     if (gameData) {
       setGame(gameData.data.data);
+      // setHistoryGuess(historyGuessData.data.data);
       setIsFinish(gameData.data.data.isFinish);
+      setLoading(false);
+    }
+  };
+
+  const fetchHistoryData = async () => {
+    setLoading(true);
+    const gameId = router.query.gameId;
+
+    const historyGuessData = await axiosClient.get(`/game/history/${gameId}`);
+
+    if (historyGuessData) {
+      setHistoryGuess(historyGuessData.data.data);
       setLoading(false);
     }
   };
 
   useEffect(() => {
     if (!router.isReady) return;
-    fetchGameData();
+    fetchHistoryData();
+  }, [router.isReady]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
   }, [router.isReady]);
 
   const handleOnChange = async (e: SyntheticEvent<Element, Event>, value: string | null) => {
@@ -50,6 +73,7 @@ function gameDetail(data: IAPIResponse<IChampion[]>) {
 
     if (!res.data.data.isFinish) {
       fetchGameData();
+      fetchHistoryData();
     } else {
       setIsFinish(true);
     }
@@ -75,6 +99,8 @@ function gameDetail(data: IAPIResponse<IChampion[]>) {
         Submit
       </Button>
 
+      {historyGuess.length > 0 ? <HistoryGuessTable data={historyGuess} /> : null}
+
       <h2>
         <Link href="/guess">Back</Link>
       </h2>
@@ -84,8 +110,7 @@ function gameDetail(data: IAPIResponse<IChampion[]>) {
 
 export async function getServerSideProps() {
   try {
-    console.log(`${process.env.API_URL}/champion`);
-    const res = await axiosClient.get(`${process.env.API_URL}/champion`);
+    const res = await axiosClient.get(`/champion`);
     const data = res.data;
 
     return { props: data };

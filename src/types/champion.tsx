@@ -20,3 +20,19 @@ export interface IChampion {
   rangeType: string;
   releasePatch: string;
 }
+
+export interface IHistory {
+  gameId: string;
+  result: {
+    gender: number;
+    resource: number;
+    species: number;
+    roles: number;
+    lanes: number;
+    range_type: number;
+    region: number;
+  };
+  championGuess: IChampion;
+  champion: IChampion;
+  order: number;
+}
